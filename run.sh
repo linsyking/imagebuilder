@@ -4,6 +4,7 @@
 if [ "$EUID" -ne 0 ]
     then echo "Please run as root"
     exit
+fi
 
 git clone https://github.com/linsyking/imagebuilder.git /compile/local/imagebuilder
 
@@ -41,4 +42,3 @@ bsdtar -xpf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${MOUNT_POINT}
 cp -r ${GIT_DIR}/extra-files/* ${MOUNT_POINT}/
 
 # arch-chroot
-exit 0
