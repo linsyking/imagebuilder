@@ -38,7 +38,7 @@ rm -rf ${BUILD_ROOT}/boot
 rm -rf ${BUILD_ROOT}/lib/modules
 rm -rf ${BUILD_ROOT}/lib/firmware
 
-bsdtar -xpf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
+tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 
 cp -r ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
 
