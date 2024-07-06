@@ -69,7 +69,7 @@ fallocate -l 512M ${MOUNT_POINT}/swap/file.0
 chmod 600 ${MOUNT_POINT}/swap/file.0
 mkswap -L swapfile.0 ${MOUNT_POINT}/swap/file.0
 
-read -p "Press enter to continue"
+read -p "Done. Press enter to umount all the things."
 
 umount ${MOUNT_POINT}/boot 
 umount ${MOUNT_POINT}
