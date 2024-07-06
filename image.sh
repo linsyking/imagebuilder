@@ -53,10 +53,7 @@ mkdir ${MOUNT_POINT}/boot
 mount /dev/loop0p3 ${MOUNT_POINT}/boot
 
 echo "copying over the root fs to the target image - this may take a while ..."
-date
-rsync -axADHSX --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
-date
-echo "done"
+rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
 
 # Create swap
 
