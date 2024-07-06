@@ -25,7 +25,6 @@ mkdir -p ${MOUNT_POINT}
 
 # Create fs
 
-cd /compile/local
 
 wget ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
 
