@@ -7,7 +7,7 @@ export IMAGE_DIR=/compile/local/imagebuilder-diskimage
 export MOUNT_POINT=/compile/local/image-mnt
 export VMLINUX=vmlinux.kpart-6.9.7-stb-cbq
 
-truncate -s 3584M ${IMAGE_DIR}/arch.img
+truncate -s 2584M ${IMAGE_DIR}/arch.img
 
 IMG=${IMAGE_DIR}/arch.img
 

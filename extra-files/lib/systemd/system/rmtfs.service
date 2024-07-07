@@ -1,0 +1,12 @@
+[Unit]
+Description=Qualcomm remotefs service
+Requires=qrtr-ns.service
+After=qrtr-ns.service
+
+[Service]
+ExecStart=/usr/bin/rmtfs -r -s -o /lib/firmware/rmtfs
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

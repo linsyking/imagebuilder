@@ -34,6 +34,14 @@ bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
+arch-chroot ${BUILD_ROOT} pacman-key --init
+arch-chroot ${BUILD_ROOT} pacman-key --populate archlinuxarm
+arch-chroot ${BUILD_ROOT} pacman -R linux-aarch64 linux-firmware-whence linux-firmware       
+arch-chroot ${BUILD_ROOT} pacman -Syu --noconfirm
+arch-chroot ${BUILD_ROOT} pacman -Scc --noconfirm
+
+read -p "Press enter to continue"
+
 rm -rf ${BUILD_ROOT}/boot
 rm -rf ${BUILD_ROOT}/lib/modules
 rm -rf ${BUILD_ROOT}/lib/firmware
@@ -41,8 +49,3 @@ rm -rf ${BUILD_ROOT}/lib/firmware
 tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 
 cp -r ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
-
-arch-chroot pacman-key --init
-arch-chroot pacman-key --populate archlinuxarm
-arch-chroot pacman -Syu --noconfirm
-arch-chroot pacman -Scc --noconfirm
