@@ -8,8 +8,6 @@ if [ "$EUID" -ne 0 ]
     exit
 fi
 
-git clone https://github.com/linsyking/imagebuilder.git /compile/local/imagebuilder
-
 export IMAGE_SRC=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
 export KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.7/6.9.7-stb-cbq.tar.gz
 export GIT_DIR=/compile/local/imagebuilder
@@ -22,6 +20,7 @@ export IMAGE_SIZE=2584M
 
 rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
+git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR}
 mkdir -p ${BUILD_ROOT}
 mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
@@ -36,6 +35,8 @@ if [ ! -d ${DOWNLOAD_DIR} ]; then
     wget ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
+
+echo "Extracting rootfs..."
 
 bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
@@ -55,7 +56,9 @@ read -p "Press enter to copy kernel to rootfs."
 
 tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 
-cp -r ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+
+# TODO: make initramfs
 
 read -p "rootfs prepared, press enter to build image"
 
