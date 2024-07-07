@@ -12,7 +12,7 @@ IMAGE_DIR=/compile/local/imagebuilder-diskimage
 IMG=${IMAGE_DIR}/arch.img
 FLASH_DEV=/dev/sda
 
-dd if=${IMG} of=${FLASH_DEV} status=progress
+dd bs=4M if=${IMG} of=${FLASH_DEV} status=progress
 
 sync
 
@@ -20,5 +20,7 @@ growpart ${FLASH_DEV} 4
 mkdir -p /mnt/roottmp
 mount ${FLASH_DEV}p4 /mnt/roottmp
 btrfs filesystem resize max /mnt/roottmp
+
+sleep 1
 umount /mnt/roottmp
 rmdir /mnt/roottmp
