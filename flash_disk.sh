@@ -18,9 +18,10 @@ sync
 
 growpart ${FLASH_DEV} 4
 mkdir -p /mnt/roottmp
+sleep 1
 mount ${FLASH_DEV}p4 /mnt/roottmp
+sleep 1
 btrfs filesystem resize max /mnt/roottmp
-
 sleep 1
 umount /mnt/roottmp
 rmdir /mnt/roottmp
