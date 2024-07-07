@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Check if the script is run as root
 if [ "$EUID" -ne 0 ]
     then echo "Please run as root"
@@ -21,7 +23,6 @@ export IMAGE_SIZE=2584M
 rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
 mkdir -p ${BUILD_ROOT}
-mkdir -p ${DOWNLOAD_DIR}
 mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
 
@@ -30,6 +31,7 @@ mkdir -p ${MOUNT_POINT}
 # check if download dir exists
 
 if [ ! -d ${DOWNLOAD_DIR} ]; then
+    mkdir -p ${DOWNLOAD_DIR}
     wget ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
     wget ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
