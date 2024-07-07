@@ -7,7 +7,7 @@ pacman-key --init
 pacman-key --populate archlinuxarm
 
 # Remove the kernel
-pacman -R linux-aarch64
+pacman -R --noconfirm linux-aarch64
 
 # Update the system
 pacman -Syu --noconfirm

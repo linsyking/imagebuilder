@@ -36,11 +36,15 @@ bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
+sed -i 's/CheckSpace/#CheckSpace/' ${BUILD_ROOT}/etc/pacman.conf
+
 cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
 arch-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
 rm ${BUILD_ROOT}/prepare.sh
+
+sed -i 's/#CheckSpace/CheckSpace/' ${BUILD_ROOT}/etc/pacman.conf
 
 read -p "Press enter to copy kernel to rootfs."
 
