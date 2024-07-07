@@ -6,8 +6,6 @@ if [ "$EUID" -ne 0 ]
     exit
 fi
 
-rm -rf /compile/local/
-
 git clone https://github.com/linsyking/imagebuilder.git /compile/local/imagebuilder
 
 export IMAGE_SRC=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
@@ -17,9 +15,10 @@ export BUILD_ROOT=/compile/local/imagebuilder-root
 export DOWNLOAD_DIR=/compile/local/imagebuilder-download
 export IMAGE_DIR=/compile/local/imagebuilder-diskimage
 export MOUNT_POINT=/compile/local/image-mnt
-export VMLINUX=vmlinux.kpart-6.9.7-stb-cbq
 export FLASH_DEV=/dev/sda
 export IMAGE_SIZE=2584M
+
+rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
 mkdir -p ${BUILD_ROOT}
 mkdir -p ${DOWNLOAD_DIR}
@@ -28,9 +27,13 @@ mkdir -p ${MOUNT_POINT}
 
 # Create fs
 
-wget ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
+# check if download dir exists
 
-wget ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
+if [ ! -d ${DOWNLOAD_DIR} ]; then
+    wget ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
+    wget ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
+    (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
+fi
 
 bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
