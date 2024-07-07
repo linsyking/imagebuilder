@@ -93,7 +93,7 @@ losetup --partscan /dev/loop0 $IMG
 echo "Partitioning done"
 read -p "Press enter to continue"
 
-dd if=${BUILD_ROOT}/boot/${VMLINUX} of=/dev/loop0p1 status=progress
+dd if=${DOWNLOAD_DIR}/boot.dd of=/dev/loop0p1 status=progress
 
 mkfs -t ext4 -O ^has_journal -m 0 -L bootpart /dev/loop0p3
 
