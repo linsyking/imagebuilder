@@ -42,7 +42,7 @@ arch-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
 rm ${BUILD_ROOT}/prepare.sh
 
-read -p "Press enter to continue"
+read -p "Press enter to copy kernel to rootfs."
 
 tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 
