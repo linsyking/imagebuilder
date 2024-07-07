@@ -18,6 +18,7 @@ export DOWNLOAD_DIR=/compile/local/imagebuilder-download
 export IMAGE_DIR=/compile/local/imagebuilder-diskimage
 export MOUNT_POINT=/compile/local/image-mnt
 export VMLINUX=vmlinux.kpart-6.9.7-stb-cbq
+export FLASH_DEV=/dev/sda
 export IMAGE_SIZE=2584M
 
 mkdir -p ${BUILD_ROOT}
@@ -38,6 +39,8 @@ bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
 arch-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
+
+rm ${BUILD_ROOT}/prepare.sh
 
 read -p "Press enter to continue"
 
@@ -111,3 +114,16 @@ read -p "Done. Press enter to umount all the things."
 umount ${MOUNT_POINT}/boot 
 umount ${MOUNT_POINT}
 losetup -d /dev/loop0
+
+read -p "Done. Press enter to flash the image to ${FLASH_DEV}."
+
+dd if=${IMG} of=${FLASH_DEV} status=progress
+
+sync
+
+growpart ${FLASH_DEV} 4
+mkdir -p /mnt/roottmp
+mount ${FLASH_DEV}p4 /mnt/roottmp
+btrfs filesystem resize max /mnt/roottmp
+umount /mnt/roottmp
+rmdir /mnt/roottmp
