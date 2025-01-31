@@ -37,13 +37,15 @@ You could use the kernel built (default) or create your custom kernel.
 
 # Build
 
+First find an image to use from [this website](https://images.linuxcontainers.org/images/fedora).
+
+Change the `IMAGE_SRC` constant in `run.sh` to your `rootfs.tar.xz` file.
+
 Run `run.sh` to create rootfs. Then run `build_image.sh` to build the image. Finally run `flash_disk` to flash the image.
 
 The building directory is in `compile/local`.
 
 # After-build
-
-After boot, you should first run `mkinitcpio -g /boot/initrd.img-6.9.7-stb-cbq` to create the initramfs.
 
 The network should be ready. Use `nmtui` to connect to wifi.
 

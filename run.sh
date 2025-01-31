@@ -3,10 +3,10 @@
 set -e
 
 # Check if the script is run as root
-if [ "$EUID" -ne 0 ]
-    then echo "Please run as root"
-    exit
-fi
+# if [ "$EUID" -ne 0 ]
+#     then echo "Please run as root"
+#     exit
+# fi
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
@@ -42,14 +42,15 @@ bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
-cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
-
-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
-
-rm ${BUILD_ROOT}/prepare.sh
-
-read -p "Press enter to copy kernel to rootfs."
-
-tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
-
 cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+
+# cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
+
+# chroot ${BUILD_ROOT} /bin/bash /prepare.sh
+
+# rm ${BUILD_ROOT}/prepare.sh
+
+# read -p "Press enter to copy kernel to rootfs."
+
+# tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
+

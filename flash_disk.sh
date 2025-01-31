@@ -8,7 +8,7 @@ if [ "$EUID" -ne 0 ]
     exit
 fi
 
-IMAGE_DIR=/compile/local/imagebuilder-diskimage
+IMAGE_DIR=compile/imagebuilder-diskimage
 IMG=${IMAGE_DIR}/arch.img
 FLASH_DEV=/dev/sda
 
