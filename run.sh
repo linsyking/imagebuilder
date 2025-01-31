@@ -8,13 +8,15 @@ if [ "$EUID" -ne 0 ]
     exit
 fi
 
-IMAGE_SRC=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
-KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.7/6.9.7-stb-cbq.tar.gz
-GIT_DIR=/compile/local/imagebuilder
-BUILD_ROOT=/compile/local/imagebuilder-root
-DOWNLOAD_DIR=/compile/local/imagebuilder-download
-IMAGE_DIR=/compile/local/imagebuilder-diskimage
-MOUNT_POINT=/compile/local/image-mnt
+# Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
+
+IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250130_20%3A33/rootfs.tar.xz
+KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.13/6.13.0-stb-cbq.tar.gz
+GIT_DIR=compile/imagebuilder
+BUILD_ROOT=compile/imagebuilder-root
+DOWNLOAD_DIR=compile/imagebuilder-download
+IMAGE_DIR=compile/imagebuilder-diskimage
+MOUNT_POINT=compile/image-mnt
 
 rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
@@ -40,15 +42,11 @@ bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
-sed -i 's/CheckSpace/#CheckSpace/' ${BUILD_ROOT}/etc/pacman.conf
-
 cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
-arch-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
+chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
 rm ${BUILD_ROOT}/prepare.sh
-
-sed -i 's/#CheckSpace/CheckSpace/' ${BUILD_ROOT}/etc/pacman.conf
 
 read -p "Press enter to copy kernel to rootfs."
 
