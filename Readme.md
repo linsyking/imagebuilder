@@ -1,16 +1,16 @@
-# Archlinux imagebuilder
+# Fedora ARM for chromebook imagebuilder
 
-Simple script to build archlinux image for my chromebook.
+Simple script to build fedora ARM image for my chromebook.
 
 Some script if from https://github.com/hexdump0815/imagebuilder.
 
-These scripts could be used for other distros. I am now using fedora because archlinux arm has a broken support for KDE.
+These scripts could be used for other distros. I am now using fedora because archlinux arm has a broken support for KDE. The old script for archlinux is in the `archlinux` branch.
 
 # Build environment
 
 You need to run this script on a  `aarch64` device. Otherwise you need to change `arch-chroot` commands in the script.
 
-Several build dependencies are needed.
+Several build dependencies are needed. Make sure you have the following commands available:
 
 - cgpt
 - growpart
@@ -30,6 +30,10 @@ Several build dependencies are needed.
 - fallocate
 - mkswap
 - truncate
+
+# Kernel
+
+You could use the kernel built (default) or create your custom kernel.
 
 # Build
 
