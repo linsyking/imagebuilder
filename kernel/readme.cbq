@@ -8,7 +8,7 @@ make olddefconfig
 
 make -j 8 Image dtbs modules
 
-export kver=`make kernelrelease`
+export kver=$(make kernelrelease)
 echo $kver
 
 # remove debug info if there and not wanted
