@@ -16,7 +16,6 @@ Several build dependencies are needed. Make sure you have the following commands
 - growpart
 - btrfs
 - tar
-- bsdtar
 - sed
 - wget
 - sync

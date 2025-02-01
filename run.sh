@@ -38,11 +38,11 @@ fi
 
 echo "Extracting rootfs..."
 
-bsdtar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
+sudo tar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
-cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
 
 # cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
