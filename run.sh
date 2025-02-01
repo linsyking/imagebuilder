@@ -2,11 +2,15 @@
 
 set -e
 
-# Check if the script is run as root
-# if [ "$EUID" -ne 0 ]
-#     then echo "Please run as root"
-#     exit
-# fi
+# Check if command exists
+echo "Checking if required commands are available..."
+command -v wget > /dev/null
+command -v tar > /dev/null
+command -v chroot > /dev/null
+command -v sudo > /dev/null
+command -v git > /dev/null
+
+echo "Done."
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
@@ -18,9 +22,9 @@ DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
+sudo rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
-git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR}
+git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR} --depth=1
 mkdir -p ${BUILD_ROOT}
 mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
@@ -31,8 +35,8 @@ mkdir -p ${MOUNT_POINT}
 
 if [ ! -d ${DOWNLOAD_DIR} ]; then
     mkdir -p ${DOWNLOAD_DIR}
-    wget ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
-    wget ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
+    wget -q ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
+    wget -q ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
 
@@ -42,12 +46,13 @@ sudo tar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 # Modify rootfs
 
-sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+sudo cp -f ${GIT_DIR}/extra-files/etc/dnf/dnf.conf ${BUILD_ROOT}/etc/dnf/dnf.conf
 
-sudo mount -t proc proc ${BUILD_ROOT}/proc
-sudo mount -o bind /dev ${BUILD_ROOT}/dev/
-sudo mount -o bind /sys ${BUILD_ROOT}/sys/
-sudo mount -o bind /run ${BUILD_ROOT}/run/
+sudo mount -t proc /proc ${BUILD_ROOT}/proc
+sudo mount --rbind /dev ${BUILD_ROOT}/dev
+sudo mount --make-rslave ${BUILD_ROOT}/dev
+sudo mount --rbind /sys ${BUILD_ROOT}/sys
+sudo mount --make-rslave ${BUILD_ROOT}/sys
 
 cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
@@ -55,12 +60,13 @@ chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
 rm ${BUILD_ROOT}/prepare.sh
 
+sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+
 sudo umount ${BUILD_ROOT}/proc
-sudo umount ${BUILD_ROOT}/dev/
-sudo umount ${BUILD_ROOT}/sys/
-sudo umount ${BUILD_ROOT}/run/
+sudo umount -R ${BUILD_ROOT}/dev
+sudo umount -R ${BUILD_ROOT}/sys
 
 read -p "Press enter to copy kernel to rootfs."
 
 tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
-
+sudo rm -rf imagebuilder-root/boot

@@ -1,16 +1,23 @@
 #!/bin/bash
 
-# Check if the script is run as root
-if [ "$EUID" -ne 0 ]
-    then echo "Please run as root"
-    exit
-fi
+echo "Checking if required commands are available..."
+command -v truncate > /dev/null
+command -v losetup > /dev/null
+command -v sgdisk > /dev/null
+command -v partprobe > /dev/null
+command -v cgpt > /dev/null
+command -v fdisk > /dev/null
+command -v mkfs > /dev/null
+command -v rsync > /dev/null
 
-BUILD_ROOT=/mnt/linsy/dev/opensuse-build/rootfs
-DOWNLOAD_DIR=/mnt/linsy/dev/opensuse-build
-IMAGE_DIR=/mnt/linsy/dev/opensuse-build/image
-MOUNT_POINT=/mnt/linsy/dev/opensuse-build/image-mnt
-IMAGE_SIZE=2662M
+echo "Done."
+
+BUILD_ROOT=compile/imagebuilder-root
+DOWNLOAD_DIR=compile/imagebuilder-download
+IMAGE_DIR=compile/imagebuilder-diskimage
+MOUNT_POINT=compile/image-mnt
+
+IMAGE_SIZE=1300M
 IMG=${IMAGE_DIR}/arch.img
 
 truncate -s ${IMAGE_SIZE} ${IMG}
@@ -51,18 +58,13 @@ read -p "Press enter to continue"
 
 dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}p1 status=progress
 
-mkfs -t ext4 -O ^has_journal -m 0 -L bootpart ${FLP}p3
-
-mkfs -t btrfs -m single -L rootpart ${FLP}p4
-mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p4 ${MOUNT_POINT}
-mkdir ${MOUNT_POINT}/boot
-mount ${FLP}p3 ${MOUNT_POINT}/boot
+mkfs -t btrfs -m single -L rootpart ${FLP}p3
+sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
 
 echo "copying over the root fs to the target image - this may take a while ..."
-rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
+sudo rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
 
 read -p "Done. Press enter to umount all the things."
 
-umount ${MOUNT_POINT}/boot 
-umount ${MOUNT_POINT}
+sudo umount ${MOUNT_POINT}
 losetup -d ${FLP}

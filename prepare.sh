@@ -7,29 +7,11 @@ mv /etc/resolv.conf /etc/resolv.conf.bak
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
-pacman-key --init
-pacman-key --populate archlinuxarm
+dnf update --assumeyes
 
-# Remove the kernel
-pacman -R --noconfirm linux-aarch64
-
-# Update the system
-pacman -Syu --noconfirm
-
-# Install packages
-pacman -S --noconfirm qrtr-git rmtfs-git
-
-# firmware
-pacman -S --noconfirm alsa-firmware linux-firmware-qcom sof-firmware
-
-# Misc
-pacman -S --noconfirm networkmanager
-
-# Clean the cache
-pacman -Scc --noconfirm
+dnf install --assumeyes rmtfs alsa-firmware alsa-sof-firmware qcom-firmware NetworkManager NetworkManager-tui NetworkManager-wifi
 
 # Enable services
-systemctl enable qrtr-ns
 systemctl enable rmtfs
 systemctl enable NetworkManager
 
