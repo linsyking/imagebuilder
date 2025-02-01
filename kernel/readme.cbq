@@ -29,7 +29,7 @@ dd if=/dev/zero of=bootloader.bin bs=512 count=1
 ls arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 kernel.itb
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 
-cp -v vmlinux.kpart /boot/vmlinux.kpart-$kver
+sudo cp -v vmlinux.kpart /boot/vmlinux.kpart-$kver
 
 tar cvzf $kver.tar.gz /boot/vmlinux.kpart-$kver /lib/modules/$kver /usr/src/linux-$kver
 
