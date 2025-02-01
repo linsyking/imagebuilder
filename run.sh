@@ -44,13 +44,23 @@ sudo tar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
 sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
 
-# cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
+sudo mount -t proc proc ${BUILD_ROOT}/proc
+sudo mount -o bind /dev ${BUILD_ROOT}/dev/
+sudo mount -o bind /sys ${BUILD_ROOT}/sys/
+sudo mount -o bind /run ${BUILD_ROOT}/run/
 
-# chroot ${BUILD_ROOT} /bin/bash /prepare.sh
+cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
-# rm ${BUILD_ROOT}/prepare.sh
+chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
-# read -p "Press enter to copy kernel to rootfs."
+rm ${BUILD_ROOT}/prepare.sh
 
-# tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
+sudo umount ${BUILD_ROOT}/proc
+sudo umount ${BUILD_ROOT}/dev/
+sudo umount ${BUILD_ROOT}/sys/
+sudo umount ${BUILD_ROOT}/run/
+
+read -p "Press enter to copy kernel to rootfs."
+
+tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 

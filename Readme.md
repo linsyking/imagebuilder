@@ -8,7 +8,9 @@ These scripts could be used for other distros. I am now using fedora because arc
 
 # Build environment
 
-You need to run this script on a  `aarch64` device. Otherwise you need to change `arch-chroot` commands in the script.
+It's possible to run the script on any architectures. Just make sure you have `qemu-user-static` and `binfmt` set properly so that `chroot` can succeed.
+
+No need to use that if you are using ARM devices.
 
 Several build dependencies are needed. Make sure you have the following commands available:
 
