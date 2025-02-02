@@ -24,6 +24,10 @@ cd compile/linux
 
 make olddefconfig
 
+make menuconfig
+
+make olddefconfig
+
 echo "Kernel config ready. Start building."
 
 make -j $(nproc) Image dtbs modules
