@@ -9,8 +9,19 @@ Example:
 ```
 
 
-If you are cross compiling the kernel, directly specify the compiler tool chain:
+If you are cross compiling the kernel, directly specify the compiler tool chain, e.g.:
 
 ```bash
 CROSS_COMPILE=aarch64-linux-gnu- ./build_kernel.sh v6.13.1
+```
+
+## Install
+
+Copy kernel modules to your root.
+
+Sample:
+
+```bash
+sudo dd if=vmlinux.kpart of=/dev/mmcblk1p2 status=progress
+sudo cgpt add -i 2 -S 0 -T 1 -P 15 /dev/mmcblk1
 ```
