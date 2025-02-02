@@ -5,14 +5,14 @@ Run script `build_kernel.sh <KERNEL VERSION>`. It will clone and compile the lin
 Example:
 
 ```bash
-./build_kernel.sh v6.13.1
+./build_kernel.sh v6.9.12
 ```
 
 
 If you are cross compiling the kernel, directly specify the compiler tool chain, e.g.:
 
 ```bash
-CROSS_COMPILE=aarch64-linux-gnu- ./build_kernel.sh v6.13.1
+CROSS_COMPILE=aarch64-linux-gnu- ./build_kernel.sh v6.9.12
 ```
 
 ## Install

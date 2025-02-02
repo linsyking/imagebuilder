@@ -1,4 +1,0 @@
-# name: stb-cbq - chromebook qcom
-
-sudo dd if=vmlinux.kpart of=/dev/mmcblk1p2 status=progress
-sudo cgpt add -i 2 -S 0 -T 1 -P 15 /dev/mmcblk1
