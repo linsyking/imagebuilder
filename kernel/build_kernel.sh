@@ -45,6 +45,10 @@ make headers_install INSTALL_HDR_PATH=../tarball/$kver/usr/src/linux-$kver
 rm ../tarball/$kver/lib/modules/$kver/build
 ln -s /usr/src/linux-headers-$kver ../tarball/$kver/lib/modules/$kver/build
 
+cp .config ../tarball/$kver/usr/src/linux-$kver
+mkdir -p ../tarball/$kver/usr/src/linux-$kver/arch/arm64
+cp -rf arch/arm64/include ../tarball/$kver/usr/src/linux-$kver/arch/arm64/include
+
 cp arch/arm64/boot/Image Image
 lz4 -f Image Image.lz4
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
@@ -58,6 +62,6 @@ cp -v vmlinux.kpart ../tarball/$kver/boot/vmlinux.kpart-$kver
 
 cd ../tarball/$kver
 
-tar cvzf $kver.tar.gz *
+tar --owner=0 --group=0 -cvzf $kver.tar.gz *
 
 mv ../../linux ../../$kver

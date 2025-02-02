@@ -1,1 +1,1 @@
-root=PARTUUID=%U/PARTNROFF=2 rootwait rw quiet splash fsck.fix=yes fsck.repair=yes deferred_probe_timeout=30 clk_ignore_unused=1 noresume
+root=PARTUUID=%U/PARTNROFF=2 rootwait rw quiet fsck.fix=yes fsck.repair=yes deferred_probe_timeout=30 clk_ignore_unused=1 noresume

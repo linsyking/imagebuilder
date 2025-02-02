@@ -2,7 +2,6 @@
 
 # This script is intended to run inside the chroot environment.
 
-
 mv /etc/resolv.conf /etc/resolv.conf.bak
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf

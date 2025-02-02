@@ -25,7 +25,8 @@ MOUNT_POINT=compile/image-mnt
 sudo rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
 
 git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR} --depth=1
-mkdir -p ${BUILD_ROOT}
+# Use root to create rootfs to preserve file permissions
+sudo mkdir -p ${BUILD_ROOT}
 mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
 
@@ -54,11 +55,11 @@ sudo mount --make-rslave ${BUILD_ROOT}/dev
 sudo mount --rbind /sys ${BUILD_ROOT}/sys
 sudo mount --make-rslave ${BUILD_ROOT}/sys
 
-cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
+sudo cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
-chroot ${BUILD_ROOT} /bin/bash /prepare.sh
+sudo chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
-rm ${BUILD_ROOT}/prepare.sh
+sudo rm ${BUILD_ROOT}/prepare.sh
 
 sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
 
@@ -68,5 +69,5 @@ sudo umount -R ${BUILD_ROOT}/sys
 
 read -p "Press enter to copy kernel to rootfs."
 
-tar -xzvf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
+sudo tar -xpf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
 sudo rm -rf imagebuilder-root/boot
