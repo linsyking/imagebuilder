@@ -5,8 +5,7 @@ set -e
 command -v growpart >/dev/null 2>&1 || { echo >&2 "growpart is required but it's not installed.  Aborting."; exit 1; }
 command -v btrfs >/dev/null 2>&1 || { echo >&2 "btrfs is required but it's not installed.  Aborting."; exit 1; }
 
-IMAGE_DIR=compile/imagebuilder-diskimage
-IMG=${IMAGE_DIR}/fedora.img
+IMG=compile/imagebuilder-diskimage/fedora.img
 FLASH_DEV=$1
 
 sudo dd bs=4M if=${IMG} of=${FLASH_DEV} status=progress
