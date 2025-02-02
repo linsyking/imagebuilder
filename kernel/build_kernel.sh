@@ -42,6 +42,9 @@ make modules_install INSTALL_MOD_PATH=../tarball/$kver
 
 make headers_install INSTALL_HDR_PATH=../tarball/$kver/usr/src/linux-$kver
 
+rm ../tarball/$kver/lib/modules/$kver/build
+ln -s /usr/src/linux-headers-$kver ../tarball/$kver/lib/modules/$kver/build
+
 cp arch/arm64/boot/Image Image
 lz4 -f Image Image.lz4
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
@@ -57,4 +60,4 @@ cd ../tarball/$kver
 
 tar cvzf $kver.tar.gz *
 
-mv ../linux ../$kver
+mv ../../linux ../../$kver

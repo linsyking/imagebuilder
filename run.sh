@@ -14,7 +14,7 @@ echo "Done."
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
-IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250130_20%3A33/rootfs.tar.xz
+IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250201_20%3A33/rootfs.tar.xz
 KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.13/6.13.0-stb-cbq.tar.gz
 GIT_DIR=compile/imagebuilder
 BUILD_ROOT=compile/imagebuilder-root
