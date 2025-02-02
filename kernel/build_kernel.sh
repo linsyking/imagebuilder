@@ -4,6 +4,11 @@
 
 set -e
 
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <kernel_version>"
+    exit 1
+fi
+
 command -v lz4 >/dev/null 2>&1 || { echo >&2 "lz4 is required but it's not installed.  Aborting."; exit 1; }
 command -v mkimage >/dev/null 2>&1 || { echo >&2 "mkimage is required but it's not installed.  Aborting."; exit 1; }
 command -v vbutil_kernel >/dev/null 2>&1 || { echo >&2 "vbutil_kernel is required but it's not installed.  Aborting."; exit 1; }

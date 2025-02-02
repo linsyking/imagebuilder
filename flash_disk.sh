@@ -2,6 +2,11 @@
 
 set -e
 
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <device>"
+    exit 1
+fi
+
 command -v growpart >/dev/null 2>&1 || { echo >&2 "growpart is required but it's not installed.  Aborting."; exit 1; }
 command -v btrfs >/dev/null 2>&1 || { echo >&2 "btrfs is required but it's not installed.  Aborting."; exit 1; }
 
