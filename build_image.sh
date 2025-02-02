@@ -50,7 +50,8 @@ sudo cgpt add -i 2 -t kernel -b 73728 -s 65536 -l KernelB -S 0 -T 2 -P 5 ${FLP}
 
 sleep 1
 
-sudo fdisk ${FLP} < gpt-partitions.txt
+#sudo fdisk ${FLP} < gpt-partitions.txt || true
+sudo sgdisk -n 3:139264:0 -t 3:8300
 sleep 1
 sudo partprobe ${FLP}
 sleep 1

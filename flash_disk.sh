@@ -21,3 +21,5 @@ sudo mount ${FLASH_DEV}3 /mnt/roottmp
 sudo btrfs filesystem resize max /mnt/roottmp
 sudo umount /mnt/roottmp
 sudo rmdir /mnt/roottmp
+
+echo "Done. Now try rebooting :)"
