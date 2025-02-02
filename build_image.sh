@@ -1,16 +1,15 @@
 #!/bin/bash
 
-echo "Checking if required commands are available..."
-command -v truncate > /dev/null
-command -v losetup > /dev/null
-command -v sgdisk > /dev/null
-command -v partprobe > /dev/null
-command -v cgpt > /dev/null
-command -v fdisk > /dev/null
-command -v mkfs > /dev/null
-command -v rsync > /dev/null
+set -e
 
-echo "Done."
+echo "==> Checking if required commands are available..."
+command -v losetup  >/dev/null 2>&1 || { echo >&2 "losetup is required but it's not installed.  Aborting."; exit 1; }
+command -v sgdisk  >/dev/null 2>&1 || { echo >&2 "sgdisk is required but it's not installed.  Aborting."; exit 1; }
+command -v partprobe  >/dev/null 2>&1 || { echo >&2 "partprobe is required but it's not installed.  Aborting."; exit 1; }
+command -v cgpt  >/dev/null 2>&1 || { echo >&2 "cgpt is required but it's not installed.  Aborting."; exit 1; }
+command -v fdisk  >/dev/null 2>&1 || { echo >&2 "fdisk is required but it's not installed.  Aborting."; exit 1; }
+command -v mkfs  >/dev/null 2>&1 || { echo >&2 "mkfs is required but it's not installed.  Aborting."; exit 1; }
+command -v rsync  >/dev/null 2>&1 || { echo >&2 "rsync is required but it's not installed.  Aborting."; exit 1; }
 
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
@@ -19,6 +18,12 @@ MOUNT_POINT=compile/image-mnt
 
 IMAGE_SIZE=1300M
 IMG=${IMAGE_DIR}/fedora.img
+
+
+sudo rm -rf $IMAGE_DIR $MOUNT_POINT
+
+mkdir -p ${IMAGE_DIR}
+mkdir -p ${MOUNT_POINT}
 
 truncate -s ${IMAGE_SIZE} ${IMG}
 
@@ -53,18 +58,20 @@ sudo losetup -d ${FLP}
 sleep 1
 sudo losetup --partscan ${FLP} $IMG
 
-echo "Partitioning done"
-read -p "Press enter to continue"
+echo "==> Partitioning done."
+
+sleep 1
 
 sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}p1 status=progress
 
 sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
 sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
 
-echo "copying over the root fs to the target image - this may take a while ..."
-sudo rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
+echo "==> Copying over the rootfs to the target image - this may take a while ..."
 
-read -p "Done. Press enter to umount all the things."
+sudo rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_POINT}
 
 sudo umount ${MOUNT_POINT}
 sudo losetup -d ${FLP}
+
+echo "Image built successifully. Now run ./flash_disk.sh /dev/sdX to flash the image to a disk."

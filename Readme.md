@@ -12,26 +12,6 @@ It's possible to run the script on any architectures. Just make sure you have `q
 
 No need to use that if you are using ARM devices.
 
-Several build dependencies are needed. Make sure you have the following commands available:
-
-- cgpt
-- growpart
-- btrfs
-- tar
-- sed
-- wget
-- sync
-- rmdir
-- sgdisk
-- losetup
-- partprobe
-- fdisk
-- mkfs (ext4, btrfs)
-- rsync
-- fallocate
-- mkswap
-- truncate
-
 # Kernel
 
 You could use the kernel built (default) or create your custom kernel.
@@ -42,11 +22,13 @@ First find an image to use from [this website](https://images.linuxcontainers.or
 
 Change the `IMAGE_SRC` constant in `run.sh` to your `rootfs.tar.xz` file.
 
-Run `run.sh` to create rootfs. Then run `build_image.sh` to build the image. Finally run `flash_disk` to flash the image.
+Run `./run.sh` to create rootfs. Then run `./build_image.sh` to build the image. Finally run `./flash_disk /dev/sdX` to flash the image to disk `sdX`.
 
-The building directory is in `compile/local`.
+The building directory is in `compile`.
 
 # After-build
+
+Use `root` password to login `root` user.
 
 The network should be ready. Use `nmtui` to connect to wifi.
 

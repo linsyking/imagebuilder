@@ -38,7 +38,7 @@ echo "Kernel built. Installing modules."
 
 mkdir -p ../tarball/$kver
 
-make modules_install INSTALL_MOD_PATH=../tarball/$kver
+make modules_install INSTALL_MOD_PATH=../tarball/$kver/usr
 
 make headers_install INSTALL_HDR_PATH=../tarball/$kver/usr/src/linux-$kver
 

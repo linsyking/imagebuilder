@@ -6,6 +6,8 @@ mv /etc/resolv.conf /etc/resolv.conf.bak
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
+echo root:root | chpasswd
+
 dnf update --assumeyes
 
 dnf install --assumeyes rmtfs alsa-firmware alsa-sof-firmware qcom-firmware NetworkManager NetworkManager-tui NetworkManager-wifi

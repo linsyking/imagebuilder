@@ -3,14 +3,12 @@
 set -e
 
 # Check if command exists
-echo "Checking if required commands are available..."
-command -v wget > /dev/null
-command -v tar > /dev/null
-command -v chroot > /dev/null
-command -v sudo > /dev/null
-command -v git > /dev/null
-
-echo "Done."
+echo "==> Checking if required commands are available..."
+command -v wget  >/dev/null 2>&1 || { echo >&2 "wget is required but it's not installed.  Aborting."; exit 1; }
+command -v tar  >/dev/null 2>&1 || { echo >&2 "tar is required but it's not installed.  Aborting."; exit 1; }
+command -v chroot  >/dev/null 2>&1 || { echo >&2 "chroot is required but it's not installed.  Aborting."; exit 1; }
+command -v sudo  >/dev/null 2>&1 || { echo >&2 "sudo is required but it's not installed.  Aborting."; exit 1; }
+command -v git  >/dev/null 2>&1 || { echo >&2 "git is required but it's not installed.  Aborting."; exit 1; }
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
@@ -19,16 +17,12 @@ KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.12/6.
 GIT_DIR=compile/imagebuilder
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
-IMAGE_DIR=compile/imagebuilder-diskimage
-MOUNT_POINT=compile/image-mnt
 
-sudo rm -rf $GIT_DIR $BUILD_ROOT $IMAGE_DIR $MOUNT_POINT
+sudo rm -rf $GIT_DIR $BUILD_ROOT
 
 git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR} --depth=1
 # Use root to create rootfs to preserve file permissions
 sudo mkdir -p ${BUILD_ROOT}
-mkdir -p ${IMAGE_DIR}
-mkdir -p ${MOUNT_POINT}
 
 # Create fs
 
@@ -36,12 +30,13 @@ mkdir -p ${MOUNT_POINT}
 
 if [ ! -d ${DOWNLOAD_DIR} ]; then
     mkdir -p ${DOWNLOAD_DIR}
+    echo "==> Downloading image and kernel..."
     wget -q ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
     wget -q ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
 
-echo "Extracting rootfs..."
+echo "==> Extracting rootfs..."
 
 sudo tar -xpf ${DOWNLOAD_DIR}/image.tar.gz -C ${BUILD_ROOT}
 
@@ -57,6 +52,8 @@ sudo mount --make-rslave ${BUILD_ROOT}/sys
 
 sudo cp ${GIT_DIR}/prepare.sh ${BUILD_ROOT}/prepare.sh
 
+echo "==> Installing basic packages..."
+
 sudo chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 
 sudo rm ${BUILD_ROOT}/prepare.sh
@@ -67,7 +64,8 @@ sudo umount ${BUILD_ROOT}/proc
 sudo umount -R ${BUILD_ROOT}/dev
 sudo umount -R ${BUILD_ROOT}/sys
 
-read -p "Press enter to copy kernel to rootfs."
+echo "==> Copying kernel to rootfs..."
 
 sudo tar -xpf ${DOWNLOAD_DIR}/kernel.tar.gz -C ${BUILD_ROOT}
-sudo rm -rf imagebuilder-root/boot
+
+echo "Succcess. Now run ./build_image.sh to build the image."
