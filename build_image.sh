@@ -16,7 +16,7 @@ DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-IMAGE_SIZE=1300M
+IMAGE_SIZE=1000M
 IMG=${IMAGE_DIR}/fedora.img
 
 

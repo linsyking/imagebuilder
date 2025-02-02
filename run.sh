@@ -4,7 +4,7 @@ set -e
 
 # Check if command exists
 echo "==> Checking if required commands are available..."
-command -v wget  >/dev/null 2>&1 || { echo >&2 "wget is required but it's not installed.  Aborting."; exit 1; }
+command -v curl  >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed.  Aborting."; exit 1; }
 command -v tar  >/dev/null 2>&1 || { echo >&2 "tar is required but it's not installed.  Aborting."; exit 1; }
 command -v chroot  >/dev/null 2>&1 || { echo >&2 "chroot is required but it's not installed.  Aborting."; exit 1; }
 command -v sudo  >/dev/null 2>&1 || { echo >&2 "sudo is required but it's not installed.  Aborting."; exit 1; }
@@ -16,6 +16,8 @@ KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.12/6.
 GIT_DIR=.
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
+
+mkdir -p compile
 
 sudo rm -rf $BUILD_ROOT
 
@@ -29,8 +31,8 @@ sudo mkdir -p ${BUILD_ROOT}
 if [ ! -d ${DOWNLOAD_DIR} ]; then
     mkdir -p ${DOWNLOAD_DIR}
     echo "==> Downloading image and kernel..."
-    wget -q ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
-    wget -q ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
+    curl -L ${IMAGE_SRC} -o ${DOWNLOAD_DIR}/image.tar.gz
+    curl -L ${KERNEL_SRC} -o ${DOWNLOAD_DIR}/kernel.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
 

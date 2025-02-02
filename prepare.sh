@@ -12,6 +12,8 @@ dnf update --assumeyes
 
 dnf install --assumeyes rmtfs alsa-firmware alsa-sof-firmware qcom-firmware NetworkManager NetworkManager-tui NetworkManager-wifi
 
+dnf clean all
+
 # Enable services
 systemctl enable rmtfs
 systemctl enable NetworkManager
