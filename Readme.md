@@ -28,7 +28,10 @@ The building directory is in `compile`.
 
 # After-build
 
+Use `alarm` user (password: `alarm`).
+
 Use `root` password to login `root` user.
+
 
 The network should be ready. Use `nmtui` to connect to wifi.
 

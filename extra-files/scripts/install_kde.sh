@@ -1,5 +1,13 @@
 #!/bin/bash
 
-# Install KDE Plasma
+sudo dnf update -y
 
-pacman -S --needed plasma-desktop
+sudo dnf install -y @kde-desktop
+sudo dnf remove -y kernel-core
+
+
+# Install some extra packages
+sudo dnf install -y mesa-vulkan-drivers pipewire plasma-milou
+
+sudo systemctl set-default graphical.target
+sudo systemctl enable sddm
