@@ -13,15 +13,14 @@ command -v sudo  >/dev/null 2>&1 || { echo >&2 "sudo is required but it's not in
 
 IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250201_20%3A33/rootfs.tar.xz
 KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.12/6.9.12-stb-cbq.tar.gz
-IMAGEBUILDER_SRC=https://github.com/linsyking/imagebuilder/tarball/main
-GIT_DIR=compile/imagebuilder
+GIT_DIR=.
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
 
-sudo rm -rf $GIT_DIR $BUILD_ROOT
+sudo rm -rf $BUILD_ROOT
 
 # Use root to create rootfs to preserve file permissions
-sudo mkdir -p ${BUILD_ROOT} $GIT_DIR
+sudo mkdir -p ${BUILD_ROOT}
 
 # Create fs
 
@@ -32,11 +31,8 @@ if [ ! -d ${DOWNLOAD_DIR} ]; then
     echo "==> Downloading image and kernel..."
     wget -q ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
     wget -q ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
-    wget -q $IMAGEBUILDER_SRC -O ${DOWNLOAD_DIR}/imagebuilder.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
-
-tar -xf ${DOWNLOAD_DIR}/imagebuilder.tar.gz -C $GIT_DIR --strip-components=1
 
 echo "==> Extracting rootfs..."
 
