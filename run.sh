@@ -8,21 +8,20 @@ command -v wget  >/dev/null 2>&1 || { echo >&2 "wget is required but it's not in
 command -v tar  >/dev/null 2>&1 || { echo >&2 "tar is required but it's not installed.  Aborting."; exit 1; }
 command -v chroot  >/dev/null 2>&1 || { echo >&2 "chroot is required but it's not installed.  Aborting."; exit 1; }
 command -v sudo  >/dev/null 2>&1 || { echo >&2 "sudo is required but it's not installed.  Aborting."; exit 1; }
-command -v git  >/dev/null 2>&1 || { echo >&2 "git is required but it's not installed.  Aborting."; exit 1; }
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
 IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250201_20%3A33/rootfs.tar.xz
 KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.12/6.9.12-stb-cbq.tar.gz
+IMAGEBUILDER_SRC=https://github.com/linsyking/imagebuilder/tarball/main
 GIT_DIR=compile/imagebuilder
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
 
 sudo rm -rf $GIT_DIR $BUILD_ROOT
 
-git clone https://github.com/linsyking/imagebuilder.git ${GIT_DIR} --depth=1
 # Use root to create rootfs to preserve file permissions
-sudo mkdir -p ${BUILD_ROOT}
+sudo mkdir -p ${BUILD_ROOT} $GIT_DIR
 
 # Create fs
 
@@ -33,8 +32,11 @@ if [ ! -d ${DOWNLOAD_DIR} ]; then
     echo "==> Downloading image and kernel..."
     wget -q ${IMAGE_SRC} -O ${DOWNLOAD_DIR}/image.tar.gz
     wget -q ${KERNEL_SRC} -O ${DOWNLOAD_DIR}/kernel.tar.gz
+    wget -q $IMAGEBUILDER_SRC -O ${DOWNLOAD_DIR}/imagebuilder.tar.gz
     (cd ${DOWNLOAD_DIR}; tar xzf kernel.tar.gz boot; mv boot/vmlinux.kpart-* boot.dd; rm -rf boot)
 fi
+
+tar -xf ${DOWNLOAD_DIR}/imagebuilder.tar.gz -C $GIT_DIR --strip-components=1
 
 echo "==> Extracting rootfs..."
 
