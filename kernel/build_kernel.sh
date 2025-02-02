@@ -4,6 +4,10 @@
 
 set -e
 
+command -v lz4 >/dev/null 2>&1 || { echo >&2 "lz4 is required but it's not installed.  Aborting."; exit 1; }
+command -v mkimage >/dev/null 2>&1 || { echo >&2 "mkimage is required but it's not installed.  Aborting."; exit 1; }
+command -v vbutil_kernel >/dev/null 2>&1 || { echo >&2 "vbutil_kernel is required but it's not installed.  Aborting."; exit 1; }
+
 mkdir -p compile
 
 if [ ! -d "compile/linux" ]; then
@@ -32,22 +36,25 @@ find . -type f -name '*.ko' | xargs -n 1 ${CROSS_COMPILE}objcopy --strip-unneede
 
 echo "Kernel built. Installing modules."
 
-make modules_install INSTALL_MOD_PATH=../tarball
+mkdir -p ../tarball/$kver
 
-make headers_install INSTALL_HDR_PATH=../tarball/usr/src/linux-$kver
+make modules_install INSTALL_MOD_PATH=../tarball/$kver
+
+make headers_install INSTALL_HDR_PATH=../tarball/$kver/usr/src/linux-$kver
 
 cp arch/arm64/boot/Image Image
 lz4 -f Image Image.lz4
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
 
-
 ls arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 kernel.itb
 
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 
-mkdir -p ../tarball/boot
-cp -v vmlinux.kpart ../tarball/boot/vmlinux.kpart-$kver
+mkdir -p ../tarball/$kver/boot
+cp -v vmlinux.kpart ../tarball/$kver/boot/vmlinux.kpart-$kver
 
-cd ../tarball
+cd ../tarball/$kver
 
 tar cvzf $kver.tar.gz *
+
+mv ../linux ../$kver
