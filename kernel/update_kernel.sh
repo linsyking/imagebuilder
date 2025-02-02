@@ -19,10 +19,11 @@ echo "==> Extracting kernel tarball"
 sudo mkdir -p /mnt/roottmp
 sudo mount ${FLASH_DEV}3 /mnt/roottmp
 
-sudo tar -C /mnt/roottmp -xpf $TARBALL
+sudo tar -C /mnt/roottmp -xvpf $TARBALL
 
 sudo umount /mnt/roottmp
 sudo rmdir /mnt/roottmp
 
 echo "==> Copying kernel image"
 sudo dd if=$IMAGE of=${FLASH_DEV}1
+sync
