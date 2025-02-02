@@ -25,4 +25,4 @@ sudo umount /mnt/roottmp
 sudo rmdir /mnt/roottmp
 
 echo "==> Copying kernel image"
-sudo dd if=$IMAGE of=${FLASH_DEV}2
+sudo dd if=$IMAGE of=${FLASH_DEV}1
