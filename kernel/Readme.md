@@ -42,3 +42,10 @@ To actually write the image, write it to parition 1:
 ```bash
 sudo dd if=vmlinux.kpart of=/dev/mmcblk1p1 status=progress
 ```
+
+## Build kernel for other boards
+
+This building script is only for trogdor devices, if you want to use it on other devices,
+
+1. Change `build_kernel.sh` "arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor*.dtb" to your dtbs
+2. Change `.config`. You could use configs from somewhere like `https://github.com/hexdump0815/linux-mainline-mediatek-mt81xx-kernel/`
