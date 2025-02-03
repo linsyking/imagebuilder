@@ -2,7 +2,7 @@
 
 Simple script to build fedora ARM image for my chromebook.
 
-Some script if from https://github.com/hexdump0815/imagebuilder.
+Some scripts are modified from https://github.com/hexdump0815/imagebuilder.
 
 These scripts could be used for other distros. I am now using fedora because archlinux arm has a broken support for KDE. The old script for archlinux is in the `archlinux` branch.
 
