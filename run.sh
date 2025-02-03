@@ -2,6 +2,8 @@
 
 set -e
 
+test -z "$1" && echo "Usage: $0 <fedora version>" && exit 1
+
 # Check if command exists
 echo "==> Checking if required commands are available..."
 command -v curl  >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed.  Aborting."; exit 1; }
@@ -11,12 +13,17 @@ command -v sudo  >/dev/null 2>&1 || { echo >&2 "sudo is required but it's not in
 
 # Goto https://images.linuxcontainers.org/images/fedora to find the images you want to use
 
-IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/41/arm64/default/20250201_20%3A33/rootfs.tar.xz
-KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.9.12/6.9.12-stb-cbq.tar.gz
+FEDORA_VER=$1
+CONTAINERS=$(curl -s -L https://images.linuxcontainers.org/images/fedora/$FEDORA_VER/arm64/default)
+IMAGE_DATE=$(echo $CONTAINERS | grep -oP '(?<=href=")[^"]+' | tail -1)
+
+test -z "$IMAGE_DATE" && echo "Fedora version not found" && exit 1
+
+IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/$FEDORA_VER/arm64/default/${IMAGE_DATE}rootfs.tar.xz
+KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.13.1/6.13.1-stb-cbq.tar.gz
 GIT_DIR=.
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
-
 mkdir -p compile
 
 sudo rm -rf $BUILD_ROOT
