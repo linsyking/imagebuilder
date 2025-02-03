@@ -1,6 +1,6 @@
 # Fedora ARM for chromebook imagebuilder
 
-Simple script to build fedora ARM image for my chromebook.
+Simple script to build fedora ARM image for my chromebook (chromebook_trogdor_lazor).
 
 Some scripts are modified from https://github.com/hexdump0815/imagebuilder.
 
