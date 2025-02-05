@@ -20,7 +20,7 @@ IMAGE_DATE=$(echo $CONTAINERS | grep -oP '(?<=href=")[^"]+' | tail -1)
 test -z "$IMAGE_DATE" && echo "Fedora version not found" && exit 1
 
 IMAGE_SRC=https://images.linuxcontainers.org/images/fedora/$FEDORA_VER/arm64/default/${IMAGE_DATE}rootfs.tar.xz
-KERNEL_SRC=https://github.com/linsyking/imagebuilder/releases/download/6.13.1/6.13.1-stb-cbq.tar.gz
+KERNEL_SRC=https://download1324.mediafire.com/g4xvurbqg4jgZjzbLtoMMo2s1JP9Kk_-AGdGq7iQxkTB0HMHRv_c7Ok5Z45rbnwlat_PgQpc-Ee6ddpQjK6HewaSTH-L_TNxxKVRmm3DT3NthlC8TPCPe9W5b06nnlIiyAIPFQO1SUBLyk9eYCWTeGNqFwm8OZA73Ffw8hDOV40/9xbhr9086m6xjba/waydroid-6.9.9-stb-cbq%2B.tar.gz
 GIT_DIR=.
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
