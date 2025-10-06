@@ -79,4 +79,4 @@ sudo rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_P
 sudo umount ${MOUNT_POINT}
 sudo losetup -d ${FLP}
 
-echo "Image built successifully. Now run ./flash_disk.sh /dev/sdX to flash the image to a disk."
+echo "Image built successifully. Now run ./flash_disk.sh $IMG /dev/sdX to flash the image to a disk."
