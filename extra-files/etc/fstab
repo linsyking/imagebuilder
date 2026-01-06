@@ -1,1 +1,1 @@
-LABEL=rootpart / btrfs defaults,ssd,compress-force=zstd,noatime,nodiratime 0 1
+LABEL=rootpart / f2fs defaults,compress_algorithm=zstd:6,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr 0 1

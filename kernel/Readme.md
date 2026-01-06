@@ -2,6 +2,18 @@
 
 **Warning.** Make sure you backup important data before updating the kernel.
 
+## Depencies
+
+For Ubuntu:
+
+```bash
+sudo apt-get install -y lz4 u-boot-tools vboot-kernel-utils
+```
+
+You also need the normal kernel development depencencies.
+
+## Build
+
 Run script `build_kernel.sh <KERNEL VERSION>`. It will clone and compile the linux kernel you specified.
 
 Example:

@@ -9,6 +9,7 @@ command -v partprobe  >/dev/null 2>&1 || { echo >&2 "partprobe is required but i
 command -v cgpt  >/dev/null 2>&1 || { echo >&2 "cgpt is required but it's not installed.  Aborting."; exit 1; }
 command -v mkfs  >/dev/null 2>&1 || { echo >&2 "mkfs is required but it's not installed.  Aborting."; exit 1; }
 command -v rsync  >/dev/null 2>&1 || { echo >&2 "rsync is required but it's not installed.  Aborting."; exit 1; }
+command -v mkfs.f2fs  >/dev/null 2>&1 || { echo >&2 "mkfs.f2fs is required but it's not installed.  Aborting."; exit 1; }
 
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
@@ -69,8 +70,10 @@ echo "==> Partitioning done."
 
 sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}p1 status=progress
 
-sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
-sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
+# sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
+sudo mkfs.f2fs -l rootpart ${FLP}p3
+# sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
+sudo mount -t f2fs -o defaults,compress_algorithm=zstd:6,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}p3 ${MOUNT_POINT}
 
 echo "==> Copying over the rootfs to the target image - this may take a while ..."
 
