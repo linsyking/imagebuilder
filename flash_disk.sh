@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <img> <device>"
     exit 1
 fi

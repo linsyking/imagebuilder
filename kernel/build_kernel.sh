@@ -52,7 +52,7 @@ make modules_install INSTALL_MOD_PATH=../tarball/$kver/usr
 make headers_install INSTALL_HDR_PATH=../tarball/$kver/usr/src/linux-$kver
 
 rm ../tarball/$kver/usr/lib/modules/$kver/build
-ln -s /usr/src/linux-headers-$kver ../tarball/$kver/usr/lib/modules/$kver/build
+ln -s /usr/src/linux-$kver ../tarball/$kver/usr/lib/modules/$kver/build
 
 cp .config ../tarball/$kver/usr/src/linux-$kver
 mkdir -p ../tarball/$kver/usr/src/linux-$kver/arch/arm64
