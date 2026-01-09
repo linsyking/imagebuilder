@@ -29,6 +29,7 @@ mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
 
 FLP=$1
+FLPP=$1 # Add suffix, some disk may need "p"
 
 # clear the partition table and reread it via partprobe
 sudo sgdisk -Z ${FLP}
@@ -62,12 +63,12 @@ sudo partprobe -d -s ${FLP} | grep  "1 2 3"
 
 echo "==> Partitioning done."
 
-sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}1 status=progress
+sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLPP}1 status=progress
 
 # sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
-sudo mkfs.f2fs -f -l rootpart ${FLP}3
+sudo mkfs.f2fs -f -l rootpart ${FLPP}3
 # sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
-sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}3 ${MOUNT_POINT}
+sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLPP}3 ${MOUNT_POINT}
 
 echo "==> Copying over the rootfs to the target image - this may take a while ..."
 
