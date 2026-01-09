@@ -16,7 +16,7 @@ DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-IMAGE_SIZE=530M
+IMAGE_SIZE=1200M # Adjust size according to your rootfs & fs
 IMG=${IMAGE_DIR}/fedora.img
 
 
@@ -73,7 +73,7 @@ sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}p1 status=progress
 # sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
 sudo mkfs.f2fs -l rootpart ${FLP}p3
 # sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
-sudo mount -t f2fs -o defaults,compress_algorithm=zstd:6,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}p3 ${MOUNT_POINT}
+sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}p3 ${MOUNT_POINT}
 
 echo "==> Copying over the rootfs to the target image - this may take a while ..."
 
