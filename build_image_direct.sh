@@ -26,6 +26,7 @@ IMG=${IMAGE_DIR}/fedora.img
 sudo rm -rf $IMAGE_DIR $MOUNT_POINT
 
 mkdir -p ${IMAGE_DIR}
+mkdir -p ${MOUNT_POINT}
 
 FLP=$1
 
@@ -61,12 +62,12 @@ sudo partprobe -d -s ${FLP} | grep  "1 2 3"
 
 echo "==> Partitioning done."
 
-sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}p1 status=progress
+sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLP}1 status=progress
 
 # sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
-sudo mkfs.f2fs -l rootpart ${FLP}p3
+sudo mkfs.f2fs -f -l rootpart ${FLP}3
 # sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
-sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}p3 ${MOUNT_POINT}
+sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLP}3 ${MOUNT_POINT}
 
 echo "==> Copying over the rootfs to the target image - this may take a while ..."
 
@@ -74,4 +75,4 @@ sudo rsync -axADHSX --info=progress2 --no-inc-recursive ${BUILD_ROOT}/ ${MOUNT_P
 
 sudo umount ${MOUNT_POINT}
 
-echo "Image built successifully. Now run ./flash_disk.sh $IMG /dev/sdX to flash the image to a disk."
+echo "Flash done."
