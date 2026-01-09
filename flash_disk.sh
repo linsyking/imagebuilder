@@ -24,10 +24,11 @@ sync
 sudo partprobe ${FLASH_DEV}
 
 sudo growpart ${FLASH_DEV} 3
-sudo mkdir -p /mnt/roottmp
-sudo mount ${FLASH_DEV}3 /mnt/roottmp
-sudo btrfs filesystem resize max /mnt/roottmp
-sudo umount /mnt/roottmp
-sudo rmdir /mnt/roottmp
+sudo resize.f2fs ${FLASH_DEV}3
+# sudo mkdir -p /mnt/roottmp
+# sudo mount ${FLASH_DEV}3 /mnt/roottmp
+# sudo btrfs filesystem resize max /mnt/roottmp
+# sudo umount /mnt/roottmp
+# sudo rmdir /mnt/roottmp
 
 echo "Done. Now try rebooting :)"
