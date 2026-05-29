@@ -1,13 +1,16 @@
 #!/bin/bash
 
-sudo dnf update -y
+set -e
 
-sudo dnf install -y @kde-desktop
-sudo dnf remove -y kernel-core
+if ! command -v nixos-rebuild >/dev/null 2>&1; then
+    echo "nixos-rebuild is required but it's not installed. Aborting."
+    exit 1
+fi
 
+sudo mkdir -p /etc/nixos
 
-# Install some extra packages
-sudo dnf install -y mesa-vulkan-drivers pipewire plasma-milou
+if [ ! -f /etc/nixos/configuration.nix ]; then
+    sudo cp /scripts/nixos-configuration.nix /etc/nixos/configuration.nix
+fi
 
-sudo systemctl set-default graphical.target
-sudo systemctl enable sddm
+sudo nixos-rebuild switch

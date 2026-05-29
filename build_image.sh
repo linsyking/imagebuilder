@@ -16,8 +16,8 @@ DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-IMAGE_SIZE=1200M # Adjust size according to your rootfs & fs
-IMG=${IMAGE_DIR}/fedora.img
+IMAGE_SIZE=1800M # Adjust size according to your rootfs & fs
+IMG=${IMAGE_DIR}/nixos.img
 
 
 sudo rm -rf $IMAGE_DIR $MOUNT_POINT

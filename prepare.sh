@@ -1,27 +1,31 @@
-#!bin/bash
+#!/bin/sh
 
 # This script is intended to run inside the chroot environment.
 
-mv /etc/resolv.conf /etc/resolv.conf.bak
+set -e
+
+export PATH=$PATH:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+mkdir -p /etc /home /root /var
+
+if [ -e /etc/resolv.conf ]; then
+    mv /etc/resolv.conf /etc/resolv.conf.bak
+fi
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
-echo root:root | chpasswd
+if [ -f /etc/passwd ]; then
+    echo root:root | chpasswd
 
-dnf update -y
-
-dnf install -y rmtfs alsa-firmware alsa-sof-firmware alsa-utils qcom-firmware NetworkManager NetworkManager-tui NetworkManager-wifi zram-generator
-
-dnf clean all
-
-# Enable services
-systemctl enable rmtfs
-systemctl enable NetworkManager
-systemctl enable systemd-zram-setup@zram0.service
-systemctl enable systemd-timesyncd
-
-# Add user
-adduser -m -G wheel alarm
-echo alarm:alarm | chpasswd
+    # Add user
+    if ! id alarm >/dev/null 2>&1; then
+        useradd -m -G wheel alarm
+    fi
+    echo alarm:alarm | chpasswd
+else
+    echo "Skipping passwd edits; NixOS will manage users from /etc/nixos/configuration.nix."
+fi
 
 rm /etc/resolv.conf
-mv /etc/resolv.conf.bak /etc/resolv.conf
+if [ -e /etc/resolv.conf.bak ]; then
+    mv /etc/resolv.conf.bak /etc/resolv.conf
+fi

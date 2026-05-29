@@ -21,7 +21,7 @@ DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-IMG=${IMAGE_DIR}/fedora.img
+IMG=${IMAGE_DIR}/nixos.img
 
 sudo rm -rf $IMAGE_DIR $MOUNT_POINT
 

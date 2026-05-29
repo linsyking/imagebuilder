@@ -8,9 +8,9 @@ if [ "$#" -ne 2 ]; then
 fi
 
 command -v growpart >/dev/null 2>&1 || { echo >&2 "growpart is required but it's not installed.  Aborting."; exit 1; }
-command -v btrfs >/dev/null 2>&1 || { echo >&2 "btrfs is required but it's not installed.  Aborting."; exit 1; }
+command -v resize.f2fs >/dev/null 2>&1 || { echo >&2 "resize.f2fs is required but it's not installed.  Aborting."; exit 1; }
 
-# compile/imagebuilder-diskimage/fedora.img
+# compile/imagebuilder-diskimage/nixos.img
 IMG=$1
 FLASH_DEV=$2
 
