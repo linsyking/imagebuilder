@@ -1,0 +1,1 @@
+quiet deferred_probe_timeout=30 clk_ignore_unused=1 noresume wifi.iface=wlan0 nvmeof.traddr=192.168.1.10 nvmeof.trsvcid=4420 nvmeof.subsysnqn=nqn.2026-06.local:root nvmeof.root=/dev/nvme0n1p1 nvmeof.fstype=ext4 nvmeof.mountopts=rw

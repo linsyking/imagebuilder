@@ -1,0 +1,42 @@
+# Override fragment for a kernel that embeds the NVMe-over-Wi-Fi root initramfs.
+#
+# This file is merged on top of .config by build_kernel_with_nvmeroot.sh.
+# The initramfs path is relative to compile/linux, so it resolves to:
+#   compile/initramfs-nvmeroot.cpio.gz
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_INITRAMFS_SOURCE="../initramfs-nvmeroot.cpio.gz"
+CONFIG_INITRAMFS_ROOT_UID=0
+CONFIG_INITRAMFS_ROOT_GID=0
+CONFIG_INITRAMFS_COMPRESSION_GZIP=y
+CONFIG_RD_GZIP=y
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+CONFIG_FW_LOADER=y
+CONFIG_FW_LOADER_COMPRESS=y
+CONFIG_MODULES=y
+CONFIG_KMOD=y
+
+# Early userspace loads these from the embedded initramfs.
+CONFIG_CFG80211=m
+CONFIG_MAC80211=m
+CONFIG_RFKILL=m
+CONFIG_WLAN_VENDOR_ATH=y
+CONFIG_ATH10K=m
+CONFIG_ATH10K_SNOC=m
+CONFIG_ATH10K_PCI=m
+CONFIG_ATH11K=m
+CONFIG_ATH11K_AHB=m
+CONFIG_ATH11K_PCI=m
+CONFIG_NVME_CORE=m
+CONFIG_NVME_FABRICS=m
+CONFIG_NVME_TCP=m
+
+# The initramfs script uses DHCP, wpa_supplicant, nvme-cli, proc/sysfs,
+# devtmpfs, tmpfs, and switch_root before handing off to the real rootfs.
+CONFIG_INET=y
+CONFIG_PACKET=y
+CONFIG_UNIX=y
+CONFIG_PROC_FS=y
+CONFIG_SYSFS=y
+CONFIG_TMPFS=y
+CONFIG_EXT4_FS=y

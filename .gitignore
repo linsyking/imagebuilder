@@ -1,2 +1,3 @@
 compile/
 build/
+kernel/*.gz
