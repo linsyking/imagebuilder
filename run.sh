@@ -71,6 +71,7 @@ sudo chroot ${BUILD_ROOT} /bin/bash /prepare.sh
 sudo rm ${BUILD_ROOT}/prepare.sh
 
 sudo cp -rf ${GIT_DIR}/extra-files/* ${BUILD_ROOT}/
+sudo chroot ${BUILD_ROOT} systemctl preset-all
 
 sudo umount ${BUILD_ROOT}/proc
 sudo umount -R ${BUILD_ROOT}/dev

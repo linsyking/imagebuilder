@@ -31,7 +31,7 @@ Read [kernel build doc](kernel/Readme.md).
 
 Clone this repo to somewhere free of space (where you will generate the image).
 
-Run `./run.sh <fedora version>` to create rootfs. Then run `./build_image.sh` to build the image. Finally run `./flash_disk compile/imagebuilder-diskimage/fedora.img /dev/sdX` to flash the image to disk `sdX`.
+Run `./run.sh <fedora version> <kernel version>` to create the rootfs. Available kernel versions are listed on the [release page](https://github.com/linsyking/imagebuilder/releases). Then run `./build_image.sh` to build the image. Finally, run `./flash_disk.sh compile/imagebuilder-diskimage/fedora.img /dev/sdX` to flash the image to disk `sdX`.
 
 The building directory is in `compile`.
 

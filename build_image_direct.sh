@@ -2,8 +2,8 @@
 
 set -e
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <device>"
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "Usage: $0 <device> [size_gib]"
     exit 1
 fi
 
@@ -15,21 +15,48 @@ command -v cgpt  >/dev/null 2>&1 || { echo >&2 "cgpt is required but it's not in
 command -v mkfs  >/dev/null 2>&1 || { echo >&2 "mkfs is required but it's not installed.  Aborting."; exit 1; }
 command -v rsync  >/dev/null 2>&1 || { echo >&2 "rsync is required but it's not installed.  Aborting."; exit 1; }
 command -v mkfs.f2fs  >/dev/null 2>&1 || { echo >&2 "mkfs.f2fs is required but it's not installed.  Aborting."; exit 1; }
+command -v blockdev  >/dev/null 2>&1 || { echo >&2 "blockdev is required but it's not installed.  Aborting."; exit 1; }
+command -v lsblk  >/dev/null 2>&1 || { echo >&2 "lsblk is required but it's not installed.  Aborting."; exit 1; }
 
 BUILD_ROOT=compile/imagebuilder-root
 DOWNLOAD_DIR=compile/imagebuilder-download
 IMAGE_DIR=compile/imagebuilder-diskimage
 MOUNT_POINT=compile/image-mnt
 
-IMG=${IMAGE_DIR}/fedora.img
+sudo rm -rf $MOUNT_POINT
 
-sudo rm -rf $IMAGE_DIR $MOUNT_POINT
-
-mkdir -p ${IMAGE_DIR}
 mkdir -p ${MOUNT_POINT}
 
 FLP=$1
-FLPP=$1 # Add suffix, some disk may need "p"
+SIZE_GIB=${2:-}
+
+test -b "${FLP}" || { echo >&2 "${FLP} is not a block device. Aborting."; exit 1; }
+
+if lsblk -nrpo MOUNTPOINTS "${FLP}" | grep -q '[^[:space:]]'; then
+    echo >&2 "${FLP} or one of its partitions is mounted. Aborting."
+    exit 1
+fi
+
+case "${FLP}" in
+    *[0-9]) FLPP="${FLP}p" ;;
+    *) FLPP="${FLP}" ;;
+esac
+
+ROOT_END_SECTOR=0
+if [ -n "${SIZE_GIB}" ]; then
+    [[ "${SIZE_GIB}" =~ ^[1-9][0-9]*$ ]] || { echo >&2 "size_gib must be a positive integer. Aborting."; exit 1; }
+
+    TOTAL_SECTORS=$(sudo blockdev --getsz "${FLP}")
+    LIMIT_SECTORS=$((SIZE_GIB * 1024 * 1024 * 2))
+    ROOT_END_SECTOR=$((LIMIT_SECTORS - 1))
+
+    if [ "${ROOT_END_SECTOR}" -le 139264 ] || [ "${LIMIT_SECTORS}" -gt "${TOTAL_SECTORS}" ]; then
+        echo >&2 "Requested size does not fit on ${FLP}. Aborting."
+        exit 1
+    fi
+
+    echo "==> Limiting the installed layout to ${SIZE_GIB} GiB; remaining space will stay unallocated."
+fi
 
 # clear the partition table and reread it via partprobe
 sudo sgdisk -Z ${FLP}
@@ -50,7 +77,7 @@ sudo cgpt add -i 2 -t kernel -b 73728 -s 65536 -l KernelB -S 0 -T 2 -P 5 ${FLP}
 
 #sleep 1
 
-sudo sgdisk -n 3:139264:0 -t 3:8300 ${FLP}
+sudo sgdisk -n 3:139264:${ROOT_END_SECTOR} -t 3:8300 ${FLP}
 
 #sleep 1
 
@@ -63,10 +90,10 @@ sudo partprobe -d -s ${FLP} | grep  "1 2 3"
 
 echo "==> Partitioning done."
 
-sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLPP}1 status=progress
+sudo dd if=${DOWNLOAD_DIR}/boot.dd of=${FLPP}1 conv=fsync status=progress
 
 # sudo mkfs -t btrfs -m single -L rootpart ${FLP}p3
-sudo mkfs.f2fs -f -l rootpart ${FLPP}3
+sudo mkfs.f2fs -f -t 0 -l rootpart ${FLPP}3
 # sudo mount -o ssd,compress-force=zstd,noatime,nodiratime ${FLP}p3 ${MOUNT_POINT}
 sudo mount -t f2fs -o compress_algorithm=zstd:3,noatime,nodiratime,atgc,gc_merge,lazytime,inline_xattr ${FLPP}3 ${MOUNT_POINT}
 
